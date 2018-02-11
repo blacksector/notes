@@ -13,19 +13,22 @@
 include('config.php');
 
 // Dont touch this stuff unless you understand it.
+
 define('DS', DIRECTORY_SEPARATOR);
 define('ROOT', realpath(dirname(__FILE__)));
 
 define('CONTENT_DIR', ROOT . DS . 'posts' . DS);
 define('TEMPLATES_DIR', ROOT . DS . 'template' . DS);
 
+// Include the Parsedown file:
+include('Parsedown.php');
+$Parsedown = new Parsedown();
+
 // Get request url and script url
 $url = "";
 $request_url = (isset($_SERVER['REQUEST_URI'])) ? $_SERVER['REQUEST_URI'] : '';
 $script_url  = (isset($_SERVER['PHP_SELF'])) ? $_SERVER['PHP_SELF'] : '';
 
-//echo $request_url;
-define('JS_PATH', str_replace('index.php', '', $script_url));
 
 // Get our url path and trim the / off the left and the right
 if ($request_url != $script_url) {
@@ -61,6 +64,9 @@ if (file_exists($file)) {
 // Grab the # tag we will use this for generating titles.
 preg_match('/(?m)^#(?!#)(.*)/', $content, $matches, PREG_OFFSET_CAPTURE);
 $pageTitle = (isset($matches[1][0])) ? $matches[1][0] : '';
+
+// Finally process the markdown and save it to $content:
+$content = $Parsedown->text($content);
 
 
 // Finally import a template and show it on screen.

@@ -1,5 +1,7 @@
 <body>
 
-  <div id="markdownContent"></div>
+  <div id="markdownContent">
+    <?php echo $content; ?>
+  </div>
 
 </body>
